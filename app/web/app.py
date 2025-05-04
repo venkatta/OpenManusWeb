@@ -29,34 +29,34 @@ from app.web.log_parser import get_all_logs_info, get_latest_log_info, parse_log
 from app.web.thinking_tracker import ThinkingTracker
 
 
-# 控制是否自动打开浏览器 (读取环境变量，默认为True)
+# Control whether to automatically open the browser (Read environment variables，Default is True)
 AUTO_OPEN_BROWSER = os.environ.get("AUTO_OPEN_BROWSER", "1") == "1"
-last_opened = False  # 跟踪浏览器是否已打开
+last_opened = False  # Tracks whether the browser is open
 
 app = FastAPI(title="OpenManus Web")
 
-# 获取当前文件所在目录
+# Get the directory where the current file is located
 current_dir = Path(__file__).parent
-# 设置静态文件目录
+# Set static file directory
 app.mount("/static", StaticFiles(directory=current_dir / "static"), name="static")
-# 设置模板目录
+# Set template directory
 templates = Jinja2Templates(directory=current_dir / "templates")
 
-# 存储活跃的会话及其结果
+# Stores active sessions and their results
 active_sessions: Dict[str, dict] = {}
 
-# 存储任务取消事件
+# Stores task cancellation events
 cancel_events: Dict[str, asyncio.Event] = {}
 
-# 创建工作区根目录
+# Create a workspace root directory
 WORKSPACE_ROOT = Path(__file__).parent.parent.parent / "workspace"
 WORKSPACE_ROOT.mkdir(exist_ok=True)
 
-# 日志目录
+# Log directory
 LOGS_DIR = Path(__file__).parent.parent.parent / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 
-# 导入日志监视器
+# Import log monitor
 from app.utils.log_monitor import LogFileMonitor
 
 
